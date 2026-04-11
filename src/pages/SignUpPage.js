@@ -15,7 +15,7 @@ import {
   FormControl,
   FormLabel,
   RadioGroup,
-  FormControllerRadio,
+  FormControlRadio,
   Link,
   Alert,
   CircularProgress,
@@ -198,17 +198,24 @@ const SignUpPage = () => {
                   control={control}
                   render={({ field }) => (
                     <RadioGroup {...field} row>
-                      <Box sx={{ display: 'flex', gap: 2 }}>
-                        <label>
-                          <input type="radio" value="Male" {...field} disabled={loading} /> Male
-                        </label>
-                        <label>
-                          <input type="radio" value="Female" {...field} disabled={loading} /> Female
-                        </label>
-                        <label>
-                          <input type="radio" value="Other" {...field} disabled={loading} /> Other
-                        </label>
-                      </Box>
+                      <FormControlLabel
+                        value="Male"
+                        control={<Radio />}
+                        label="Male"
+                        disabled={loading}
+                      />
+                      <FormControlLabel
+                        value="Female"
+                        control={<Radio />}
+                        label="Female"
+                        disabled={loading}
+                      />
+                      <FormControlLabel
+                        value="Other"
+                        control={<Radio />}
+                        label="Other"
+                        disabled={loading}
+                      />
                     </RadioGroup>
                   )}
                 />
