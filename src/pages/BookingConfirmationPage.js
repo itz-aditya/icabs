@@ -27,7 +27,7 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { getBookingById } from '../services/bookingService';
 import { getVehicleById } from '../services/vehicleService';
 import { getDriverById } from '../services/driverService';
-import { formatCurrency, formatDateTime } from '../utils/formatters';
+import { formatCurrency } from '../utils/formatters';
 import { ROUTES } from '../constants/routes';
 import { toast } from 'react-toastify';
 

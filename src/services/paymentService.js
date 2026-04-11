@@ -5,7 +5,6 @@
 
 import { ref, set, get, push } from 'firebase/database';
 import { database } from '../config/firebase';
-import crypto from 'crypto-js';
 
 /**
  * Load Razorpay script

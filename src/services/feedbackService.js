@@ -3,7 +3,7 @@
  * Handles user feedback for bookings
  */
 
-import { ref, push, set, get, query, orderByChild, equalTo } from 'firebase/database';
+import { ref, push, set, get } from 'firebase/database';
 import { database } from '../config/firebase';
 
 /**

@@ -21,7 +21,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import HomeIcon from '@mui/icons-material/Home';
 import HistoryIcon from '@mui/icons-material/History';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { formatCurrency, formatDateTime } from '../utils/formatters';
+import { formatCurrency } from '../utils/formatters';
 import { ROUTES } from '../constants/routes';
 
 const PaymentSuccessPage = () => {

@@ -3,7 +3,7 @@
  * Handles all Firebase vehicle operations
  */
 
-import { ref, set, get, update, remove, push, query, orderByChild, equalTo } from 'firebase/database';
+import { ref, set, get, update, remove, push } from 'firebase/database';
 import { database } from '../config/firebase';
 
 /**

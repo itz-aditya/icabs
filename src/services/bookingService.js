@@ -3,7 +3,7 @@
  * Handles all Firebase booking operations
  */
 
-import { ref, set, get, update, push, query, orderByChild, equalTo } from 'firebase/database';
+import { ref, set, get, update, push } from 'firebase/database';
 import { database } from '../config/firebase';
 import { BOOKING_STATUS, PAYMENT_STATUS } from '../constants/bookingStatus';
 

@@ -32,7 +32,7 @@ import {
   verifyPaymentSignature,
   updatePaymentStatus,
 } from '../services/paymentService';
-import { updateBookingStatus, updatePaymentStatus as updateBookingPayment } from '../services/bookingService';
+import { updatePaymentStatus as updateBookingPayment } from '../services/bookingService';
 import { formatCurrency } from '../utils/formatters';
 import { ROUTES } from '../constants/routes';
 import { toast } from 'react-toastify';
