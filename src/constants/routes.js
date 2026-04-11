@@ -16,7 +16,9 @@ export const ROUTES = {
   // Protected User Routes
   BOOKING: '/booking',
   BOOKING_CONFIRM: '/booking/confirm',
-  PAYMENT: '/payment',
+  PAYMENT: '/payment/:bookingId',
+  PAYMENT_SUCCESS: '/payment/success',
+  PAYMENT_FAILURE: '/payment/failure',
   HISTORY: '/history',
   FEEDBACK: '/feedback',
   CHANGE_PASSWORD: '/change-password',
