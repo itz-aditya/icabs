@@ -15,7 +15,8 @@ import {
   FormControl,
   FormLabel,
   RadioGroup,
-  FormControlRadio,
+  FormControlLabel,
+  Radio,
   Link,
   Alert,
   CircularProgress,
@@ -28,6 +29,8 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { signUp } from '../services/authService';
+import { signOut } from 'firebase/auth';
+import { auth } from '../config/firebase'
 import { toast } from 'react-toastify';
 import { ROUTES } from '../constants/routes';
 
@@ -94,8 +97,11 @@ const SignUpPage = () => {
         password: data.password,
       });
 
+      await signOut(auth);
+
       toast.success('Account created successfully! Please sign in.');
       navigate(ROUTES.SIGN_IN);
+      setLoading(false);
     } catch (err) {
       console.error('Signup error:', err);
       let errorMessage = 'Failed to create account';
@@ -110,7 +116,6 @@ const SignUpPage = () => {
 
       setError(errorMessage);
       toast.error(errorMessage);
-    } finally {
       setLoading(false);
     }
   };

@@ -15,6 +15,7 @@ import {
 import { ref, set, get } from 'firebase/database';
 import { auth, database } from '../config/firebase';
 import { DEFAULT_USER_TYPE } from '../constants/userTypes';
+import { clearFirebaseCache, clearWebsocketFailure } from '../utils/clearFirebaseCache';
 
 /**
  * Sign up a new user
@@ -91,8 +92,18 @@ export const signIn = async (email, password) => {
  */
 export const logout = async () => {
   try {
+    // Clear Firebase cache and websocket failure before signing out
+    console.log('Clearing Firebase cache before logout...');
+    clearFirebaseCache();
+    clearWebsocketFailure();
+
     await signOut(auth);
+
+    // Clear again after signout to ensure clean state
+    clearWebsocketFailure();
+    console.log('Logout successful, cache cleared');
   } catch (error) {
+    console.error('Logout error:', error);
     throw error;
   }
 };

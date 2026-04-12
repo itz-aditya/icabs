@@ -3,7 +3,7 @@
  * User login page with validation
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Container,
   Paper,
@@ -27,6 +27,7 @@ import { signIn } from '../services/authService';
 import { toast } from 'react-toastify';
 import { ROUTES } from '../constants/routes';
 import { useAuth } from '../context/AuthContext';
+import { clearWebsocketFailure } from '../utils/clearFirebaseCache'
 
 // Validation schema
 const schema = yup.object({
@@ -58,14 +59,25 @@ const SignInPage = () => {
     },
   });
 
+  // Clear websocket failure on component mount
+  useEffect(() => {
+    console.log('SignInPage mounted - clearing websocket failure');
+    clearWebsocketFailure();
+  }, []);
+
   const onSubmit = async (data) => {
     try {
       setLoading(true);
       setError('');
 
+      clearWebsocketFailure();
+
       const user = await signIn(data.email, data.password);
 
-      toast.success(`Welcome back, ${user.fullName}!`);
+      toast.success(`Welcome back, ${user.fullName || 'User'}!`);
+
+      // Small delay to ensure auth state is updated
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       // Redirect based on user type
       if (user.userType === 'ADMIN') {
@@ -73,6 +85,8 @@ const SignInPage = () => {
       } else {
         navigate(ROUTES.HOME);
       }
+
+      setLoading(false);
     } catch (err) {
       console.error('Sign in error:', err);
       let errorMessage = 'Failed to sign in';
@@ -93,7 +107,6 @@ const SignInPage = () => {
 
       setError(errorMessage);
       toast.error(errorMessage);
-    } finally {
       setLoading(false);
     }
   };
