@@ -285,56 +285,8 @@ const BookingPage = () => {
                   </Typography>
                   <Divider sx={{ mb: 3 }} />
 
-                  <Grid container spacing={2}>
-                    {/* Pickup Date */}
-                    <Grid item xs={12} sm={6}>
-                      <Controller
-                        name="pickupDate"
-                        control={control}
-                        render={({ field }) => (
-                          <TextField
-                            {...field}
-                            fullWidth
-                            type="date"
-                            label="Pickup Date"
-                            InputLabelProps={{ shrink: true }}
-                            error={!!errors.pickupDate}
-                            helperText={errors.pickupDate?.message}
-                            disabled={loading}
-                            InputProps={{
-                              startAdornment: <CalendarTodayIcon sx={{ mr: 1, color: 'action.active' }} />
-                            }}
-                            inputProps={{
-                              min: new Date().toISOString().split('T')[0]
-                            }}
-                          />
-                        )}
-                      />
-                    </Grid>
-
-                    {/* Pickup Time */}
-                    <Grid item xs={12} sm={6}>
-                      <Controller
-                        name="pickupTime"
-                        control={control}
-                        render={({ field }) => (
-                          <TextField
-                            {...field}
-                            fullWidth
-                            type="time"
-                            label="Pickup Time"
-                            InputLabelProps={{ shrink: true }}
-                            error={!!errors.pickupTime}
-                            helperText={errors.pickupTime?.message}
-                            disabled={loading}
-                            InputProps={{
-                              startAdornment: <AccessTimeIcon sx={{ mr: 1, color: 'action.active' }} />
-                            }}
-                          />
-                        )}
-                      />
-                    </Grid>
-
+                  {/* Address Fields Row */}
+                  <Grid container spacing={2} sx={{ mb: 2 }}>
                     {/* Source Address */}
                     <Grid item xs={12}>
                       <Controller
@@ -377,6 +329,72 @@ const BookingPage = () => {
                               startAdornment: <LocationOnIcon sx={{ mr: 1, color: 'error.main' }} />
                             }}
                           />
+                        )}
+                      />
+                    </Grid>
+                  </Grid>
+
+                  {/* Date and Time Row */}
+                  <Grid container spacing={2}>
+                    {/* Pickup Date */}
+                    <Grid item xs={12} sm={6}>
+                      <Controller
+                        name="pickupDate"
+                        control={control}
+                        render={({ field }) => (
+                          <Box>
+                            <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block' }}>
+                              Pickup Date *
+                            </Typography>
+                            <TextField
+                              {...field}
+                              fullWidth
+                              type="date"
+                              error={!!errors.pickupDate}
+                              helperText={errors.pickupDate?.message}
+                              disabled={loading}
+                              inputProps={{
+                                min: new Date().toISOString().split('T')[0]
+                              }}
+                              sx={{
+                                '& .MuiOutlinedInput-root': {
+                                  '& input': {
+                                    padding: '16.5px 14px',
+                                  }
+                                }
+                              }}
+                            />
+                          </Box>
+                        )}
+                      />
+                    </Grid>
+
+                    {/* Pickup Time */}
+                    <Grid item xs={12} sm={6}>
+                      <Controller
+                        name="pickupTime"
+                        control={control}
+                        render={({ field }) => (
+                          <Box>
+                            <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block' }}>
+                              Pickup Time *
+                            </Typography>
+                            <TextField
+                              {...field}
+                              fullWidth
+                              type="time"
+                              error={!!errors.pickupTime}
+                              helperText={errors.pickupTime?.message}
+                              disabled={loading}
+                              sx={{
+                                '& .MuiOutlinedInput-root': {
+                                  '& input': {
+                                    padding: '16.5px 14px',
+                                  }
+                                }
+                              }}
+                            />
+                          </Box>
                         )}
                       />
                     </Grid>
