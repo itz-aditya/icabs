@@ -21,7 +21,16 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { formatCurrency } from '../utils/formatters';
 
 const VehicleCard = ({ vehicle, onBook, showBookButton = false }) => {
-  const defaultImage = 'https://via.placeholder.com/400x250?text=Vehicle+Image';
+  const [imageError, setImageError] = React.useState(false);
+
+  const getVehicleImage = () => {
+    if (imageError || !vehicle.imageUrl) {
+      // Return a better placeholder based on vehicle type
+      const type = vehicle.type?.toLowerCase() || 'car';
+      return `https://ui-avatars.com/api/?name=${encodeURIComponent(vehicle.model)}&size=400&background=1976d2&color=fff&bold=true&format=svg`;
+    }
+    return vehicle.imageUrl;
+  };
 
   return (
     <Card 
@@ -40,9 +49,13 @@ const VehicleCard = ({ vehicle, onBook, showBookButton = false }) => {
       <CardMedia
         component="img"
         height="200"
-        image={vehicle.imageUrl || defaultImage}
+        image={getVehicleImage()}
         alt={vehicle.model}
-        sx={{ objectFit: 'cover' }}
+        onError={() => setImageError(true)}
+        sx={{
+          objectFit: 'cover',
+          backgroundColor: '#f5f5f5'
+        }}
       />
       
       <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
