@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Firebase Cache - iCabs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1976d2;
+        }
+        button {
+            background-color: #1976d2;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background-color: #1565c0;
+        }
+        button.danger {
+            background-color: #d32f2f;
+        }
+        button.danger:hover {
+            background-color: #c62828;
+        }
+        .success {
+            color: #2e7d32;
+            background-color: #e8f5e9;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .info {
+            background-color: #e3f2fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        ul {
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧹 Clear Firebase Cache</h1>
+        <p>Use this page to clear all Firebase-related cache and fix authentication issues.</p>
+        
+        <div class="info">
+            <strong>Common Issues This Fixes:</strong>
+            <ul>
+                <li>Blank white screen after login</li>
+                <li>"firebase:previous_websocket_failure" error</li>
+                <li>App stuck on loading</li>
+                <li>Authentication not working</li>
+                <li>Cached user data causing errors</li>
+            </ul>
+        </div>
+
+        <div style="margin: 20px 0;">
+            <button onclick="clearWebsocketOnly()">Clear Websocket Failure Only</button>
+            <button class="danger" onclick="clearAllFirebaseCache()">Clear ALL Firebase Cache</button>
+        </div>
+
+        <div id="result"></div>
+
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
+            <button onclick="goToApp()" style="background-color: #2e7d32;">Go to App</button>
+            <button onclick="location.reload()">Refresh This Page</button>
+        </div>
+    </div>
+
+    <script>
+        function clearWebsocketOnly() {
+            try {
+                localStorage.removeItem('firebase:previous_websocket_failure');
+                sessionStorage.removeItem('firebase:previous_websocket_failure');
+                
+                showResult('✅ Websocket failure flag cleared!', 'success');
+            } catch (error) {
+                showResult('❌ Error: ' + error.message, 'error');
+            }
+        }
+
+        function clearAllFirebaseCache() {
+            try {
+                let count = 0;
+                
+                // Clear localStorage
+                const keysToRemove = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key && (key.startsWith('firebase:') || key.includes('firebase'))) {
+                        keysToRemove.push(key);
+                    }
+                }
+                
+                keysToRemove.forEach(key => {
+                    localStorage.removeItem(key);
+                    count++;
+                });
+                
+                // Clear sessionStorage
+                const sessionKeysToRemove = [];
+                for (let i = 0; i < sessionStorage.length; i++) {
+                    const key = sessionStorage.key(i);
+                    if (key && (key.startsWith('firebase:') || key.includes('firebase'))) {
+                        sessionKeysToRemove.push(key);
+                    }
+                }
+                
+                sessionKeysToRemove.forEach(key => {
+                    sessionStorage.removeItem(key);
+                    count++;
+                });
+                
+                showResult(`✅ Successfully cleared ${count} Firebase cache items!, 'success'`);
+            } catch (error) {
+                showResult('❌ Error: ' + error.message, 'error');
+            }
+        }
+
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = type;
+            resultDiv.innerHTML = message;
+        }
+
+        function goToApp() {
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html>
