@@ -74,7 +74,7 @@ const HomePage = () => {
       >
         <Container maxWidth="md">
           <Typography variant="h2" component="h1" gutterBottom fontWeight={700}>
-            Welcome to iCabs
+            Welcome to i Cabs
           </Typography>
           <Typography variant="h5" sx={{ mb: 4, opacity: 0.9 }}>
             Your trusted cab booking service - Safe, Reliable, and Affordable
