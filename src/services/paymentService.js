@@ -82,7 +82,12 @@ export const initiateRazorpayPayment = async (orderData, options) => {
     const razorpayKeyId = process.env.REACT_APP_RAZORPAY_KEY_ID;
 
     if (!razorpayKeyId) {
-      throw new Error('Razorpay Key ID not found');
+      throw new Error('Razorpay Key ID not found in environment variables. Please check your .env.local file.');
+    }
+
+    if (razorpayKeyId === 'rzp_test_xxxxxxxxxxxxx' || razorpayKeyId.includes('xxx')) {
+      console.error('[paymentService] Razorpay Key ID is still a placeholder!');
+      throw new Error('Razorpay Key ID is a placeholder. Please add your actual Razorpay Test Key ID to .env.local');
     }
 
     const razorpayOptions = {
@@ -91,11 +96,17 @@ export const initiateRazorpayPayment = async (orderData, options) => {
       currency: orderData.currency || 'INR',
       name: 'iCabs',
       description: `Booking Payment - ${orderData.bookingId}`,
-      order_id: orderData.orderId, // Pass our order ID as reference
+      // Note: order_id is optional for simple payments without backend
+      // It's required only when you create orders via Razorpay Orders API
+      image: '', // You can add your logo URL here
       prefill: {
         name: options.userName || '',
         email: options.userEmail || '',
         contact: options.userPhone || '',
+      },
+      notes: {
+        bookingId: orderData.bookingId,
+        orderId: orderData.orderId,
       },
       theme: {
         color: '#1976d2', // Primary color from theme
@@ -116,7 +127,14 @@ export const initiateRazorpayPayment = async (orderData, options) => {
       },
     };
 
+    console.log('[paymentService] Razorpay options:', {
+      ...razorpayOptions,
+      key: razorpayOptions.key?.substring(0, 15) + '...',
+    });
+
+    console.log('[paymentService] Creating Razorpay instance...');
     const razorpayInstance = new window.Razorpay(razorpayOptions);
+    console.log('[paymentService] Razorpay instance created successfully');
 
     razorpayInstance.on('payment.failed', function (response) {
       // Payment failed
@@ -142,16 +160,22 @@ export const initiateRazorpayPayment = async (orderData, options) => {
  */
 export const verifyPaymentSignature = (paymentData) => {
   try {
+    console.log('[paymentService] Verifying payment:', paymentData);
+
     // In a real production app, this verification MUST be done on the backend
     // For this demo, we'll do a basic check
-    
-    // For now, we'll just check if all required fields are present
-    return !!(
-      paymentData.razorpay_payment_id &&
-      paymentData.razorpay_order_id
-    );
+
+    // When using simple checkout (without order_id), Razorpay only returns razorpay_payment_id
+    // When using Orders API, it returns razorpay_payment_id, razorpay_order_id, and razorpay_signature
+
+    // Check if payment_id exists (minimum requirement)
+    const isValid = !!(paymentData.razorpay_payment_id);
+
+    console.log('[paymentService] Payment verification result:', isValid);
+
+    return isValid;
   } catch (error) {
-    console.error('Error verifying payment:', error);
+    console.error('[paymentService] Error verifying payment:', error);
     return false;
   }
 };

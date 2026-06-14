@@ -21,6 +21,8 @@ import {
 import PaymentIcon from '@mui/icons-material/Payment';
 import SecurityIcon from '@mui/icons-material/Security';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getBookingById } from '../services/bookingService';
@@ -162,7 +164,6 @@ const PaymentPage = () => {
         },
       });
     } catch (err) {
-      console.error('Error processing payment success:', err);
       toast.error('Payment verification failed');
       setProcessing(false);
     }
@@ -247,53 +248,113 @@ const PaymentPage = () => {
           {/* Booking Summary */}
           <Grid item xs={12}>
             <Paper elevation={2} sx={{ p: 3 }}>
-              <Typography variant="h6" gutterBottom fontWeight={600}>
+              <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mb: 3 }}>
                 Booking Summary
               </Typography>
-              <Divider sx={{ mb: 2 }} />
 
               <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">
-                    Booking ID
-                  </Typography>
-                  <Typography variant="body1" fontWeight={600}>
-                    {booking.bookingId || booking.id}
-                  </Typography>
+                {/* Booking ID */}
+                <Grid item xs={12} sm={6}>
+                  <Card variant="outlined" sx={{ height: '100%' }}>
+                    <CardContent>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                        <CheckCircleIcon color="primary" fontSize="small" />
+                        <Typography variant="caption" color="text.secondary" sx={{ textTransform: 'uppercase', fontWeight: 600 }}>
+                          Booking ID
+                        </Typography>
+                      </Box>
+                      <Typography variant="body1" fontWeight={600} sx={{ fontFamily: 'monospace' }}>
+                        {booking.bookingId || booking.id}
+                      </Typography>
+                    </CardContent>
+                  </Card>
                 </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">
-                    Pickup Date & Time
-                  </Typography>
-                  <Typography variant="body1" fontWeight={600}>
-                    {booking.pickupDate} at {booking.pickupTime}
-                  </Typography>
+
+                {/* Pickup Date & Time */}
+                <Grid item xs={12} sm={6}>
+                  <Card variant="outlined" sx={{ height: '100%' }}>
+                    <CardContent>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                        <DirectionsCarIcon color="primary" fontSize="small" />
+                        <Typography variant="caption" color="text.secondary" sx={{ textTransform: 'uppercase', fontWeight: 600 }}>
+                          Pickup Date & Time
+                        </Typography>
+                      </Box>
+                      <Typography variant="body1" fontWeight={600}>
+                        {booking.pickupDate} at {booking.pickupTime}
+                      </Typography>
+                    </CardContent>
+                  </Card>
                 </Grid>
+
+                {/* Route */}
                 <Grid item xs={12}>
-                  <Typography variant="body2" color="text.secondary">
-                    Route
-                  </Typography>
-                  <Typography variant="body1" fontWeight={600}>
-                    {booking.sourceAddress?.address} → {booking.destinationAddress?.address}
-                  </Typography>
+                  <Card variant="outlined" sx={{ bgcolor: 'rgba(25, 118, 210, 0.04)' }}>
+                    <CardContent>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                        <LocationOnIcon color="primary" fontSize="small" />
+                        <Typography variant="caption" color="text.secondary" sx={{ textTransform: 'uppercase', fontWeight: 600 }}>
+                          Route
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+                        <Chip
+                          label={booking.sourceAddress?.address}
+                          size="small"
+                          color="success"
+                          variant="outlined"
+                          sx={{ maxWidth: '100%', height: 'auto', '& .MuiChip-label': { whiteSpace: 'normal', py: 1 } }}
+                        />
+                        <Typography variant="h6" color="primary">→</Typography>
+                        <Chip
+                          label={booking.destinationAddress?.address}
+                          size="small"
+                          color="error"
+                          variant="outlined"
+                          sx={{ maxWidth: '100%', height: 'auto', '& .MuiChip-label': { whiteSpace: 'normal', py: 1 } }}
+                        />
+                      </Box>
+                    </CardContent>
+                  </Card>
                 </Grid>
+
+                {/* Vehicle */}
                 {vehicle && (
-                  <Grid item xs={6}>
-                    <Typography variant="body2" color="text.secondary">
-                      Vehicle
-                    </Typography>
-                    <Typography variant="body1" fontWeight={600}>
-                      {vehicle.model} ({vehicle.type})
-                    </Typography>
+                  <Grid item xs={12} sm={6}>
+                    <Card variant="outlined" sx={{ height: '100%' }}>
+                      <CardContent>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                          <DirectionsCarIcon color="primary" fontSize="small" />
+                          <Typography variant="caption" color="text.secondary" sx={{ textTransform: 'uppercase', fontWeight: 600 }}>
+                            Vehicle
+                          </Typography>
+                        </Box>
+                        <Typography variant="body1" fontWeight={600}>
+                          {vehicle.model}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {vehicle.type}
+                        </Typography>
+                      </CardContent>
+                    </Card>
                   </Grid>
                 )}
-                <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">
-                    Distance
-                  </Typography>
-                  <Typography variant="body1" fontWeight={600}>
-                    {booking.distance} km
-                  </Typography>
+
+                {/* Distance */}
+                <Grid item xs={12} sm={6}>
+                  <Card variant="outlined" sx={{ height: '100%' }}>
+                    <CardContent>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                        <LocationOnIcon color="primary" fontSize="small" />
+                        <Typography variant="caption" color="text.secondary" sx={{ textTransform: 'uppercase', fontWeight: 600 }}>
+                          Distance
+                        </Typography>
+                      </Box>
+                      <Typography variant="h5" fontWeight={600} color="primary">
+                        {booking.distance} km
+                      </Typography>
+                    </CardContent>
+                  </Card>
                 </Grid>
               </Grid>
             </Paper>

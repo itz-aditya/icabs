@@ -337,7 +337,7 @@ const BookingPage = () => {
                   {/* Date and Time Row */}
                   <Grid container spacing={2}>
                     {/* Pickup Date */}
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={4}>
                       <Controller
                         name="pickupDate"
                         control={control}
@@ -370,7 +370,7 @@ const BookingPage = () => {
                     </Grid>
 
                     {/* Pickup Time */}
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={4}>
                       <Controller
                         name="pickupTime"
                         control={control}
@@ -401,10 +401,15 @@ const BookingPage = () => {
 
                     {/* Distance Display */}
                     {distance > 0 && (
-                      <Grid item xs={12}>
-                        <Alert severity="info">
-                          Estimated Distance: <strong>{distance} km</strong>
-                        </Alert>
+                      <Grid item xs={12} sm={4}>
+                        <Box>
+                          <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block' }}>
+                            Estimated Distance
+                          </Typography>
+                          <Alert severity="info" sx={{ mt: 0 }}>
+                            <strong>{distance} km</strong>
+                          </Alert>
+                        </Box>
                       </Grid>
                     )}
                   </Grid>
@@ -481,76 +486,97 @@ const BookingPage = () => {
                   </Typography>
                   <Divider sx={{ mb: 3 }} />
 
-                  {/* Booking Summary */}
-                  <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                      <Typography variant="subtitle2" color="text.secondary">
-                        Trip Details
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Typography variant="body2" color="text.secondary">
-                        Pickup Date & Time
-                      </Typography>
-                      <Typography variant="body1" fontWeight={600}>
-                        {watch('pickupDate')} at {watch('pickupTime')}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Typography variant="body2" color="text.secondary">
-                        Distance
-                      </Typography>
-                      <Typography variant="body1" fontWeight={600}>
-                        {distance} km
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Typography variant="body2" color="text.secondary">
-                        From
-                      </Typography>
-                      <Typography variant="body1" fontWeight={600}>
-                        {watch('sourceAddress')}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Typography variant="body2" color="text.secondary">
-                        To
-                      </Typography>
-                      <Typography variant="body1" fontWeight={600}>
-                        {watch('destinationAddress')}
-                      </Typography>
-                    </Grid>
+                  {/* Trip Details Card */}
+                  <Box sx={{ mb: 3 }}>
+                    <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <LocationOnIcon color="primary" />
+                      Trip Details
+                    </Typography>
 
-                    <Grid item xs={12}>
-                      <Divider sx={{ my: 2 }} />
-                      <Typography variant="subtitle2" color="text.secondary">
+                    <Grid container spacing={3}>
+                      <Grid item xs={12} sm={6}>
+                        <Box sx={{ p: 2, bgcolor: 'background.default', borderRadius: 1, border: '1px solid', borderColor: 'divider' }}>
+                          <Typography variant="caption" color="text.secondary" sx={{ textTransform: 'uppercase', fontWeight: 600 }}>
+                            Pickup Date & Time
+                          </Typography>
+                          <Typography variant="body1" fontWeight={600} sx={{ mt: 0.5 }}>
+                            {watch('pickupDate')} at {watch('pickupTime')}
+                          </Typography>
+                        </Box>
+                      </Grid>
+
+                      <Grid item xs={12} sm={6}>
+                        <Box sx={{ p: 2, bgcolor: 'background.default', borderRadius: 1, border: '1px solid', borderColor: 'divider' }}>
+                          <Typography variant="caption" color="text.secondary" sx={{ textTransform: 'uppercase', fontWeight: 600 }}>
+                            Distance
+                          </Typography>
+                          <Typography variant="body1" fontWeight={600} color="primary" sx={{ mt: 0.5 }}>
+                            {distance} km
+                          </Typography>
+                        </Box>
+                      </Grid>
+
+                      <Grid item xs={12}>
+                        <Box sx={{ p: 2, bgcolor: 'rgba(46, 125, 50, 0.08)', borderRadius: 1, border: '1px solid', borderColor: 'success.main' }}>
+                          <Typography variant="caption" color="success.dark" sx={{ textTransform: 'uppercase', fontWeight: 600 }}>
+                            From
+                          </Typography>
+                          <Typography variant="body1" fontWeight={600} sx={{ mt: 0.5 }}>
+                            {watch('sourceAddress')}
+                          </Typography>
+                        </Box>
+                      </Grid>
+
+                      <Grid item xs={12}>
+                        <Box sx={{ p: 2, bgcolor: 'rgba(211, 47, 47, 0.08)', borderRadius: 1, border: '1px solid', borderColor: 'error.main' }}>
+                          <Typography variant="caption" color="error.dark" sx={{ textTransform: 'uppercase', fontWeight: 600 }}>
+                            To
+                          </Typography>
+                          <Typography variant="body1" fontWeight={600} sx={{ mt: 0.5 }}>
+                            {watch('destinationAddress')}
+                          </Typography>
+                        </Box>
+                      </Grid>
+                    </Grid>
+                  </Box>
+
+                  {/* Selected Vehicle Card */}
+                  {selectedVehicle && (
+                    <Box>
+                      <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <DirectionsCarIcon color="primary" />
                         Selected Vehicle
                       </Typography>
-                    </Grid>
-                    {selectedVehicle && (
-                      <>
-                        <Grid item xs={6}>
-                          <Typography variant="body2" color="text.secondary">
-                            Vehicle Model
-                          </Typography>
-                          <Typography variant="body1" fontWeight={600}>
-                            {selectedVehicle.model}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={6}>
-                          <Typography variant="body2" color="text.secondary">
-                            Vehicle Type
-                          </Typography>
-                          <Typography variant="body1" fontWeight={600}>
-                            {selectedVehicle.type}
-                          </Typography>
-                        </Grid>
-                      </>
-                    )}
-                  </Grid>
 
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
-                    <Button onClick={handleBack}>
+                      <Grid container spacing={3}>
+                        <Grid item xs={12} sm={6}>
+                          <Box sx={{ p: 2, bgcolor: 'background.default', borderRadius: 1, border: '1px solid', borderColor: 'divider' }}>
+                            <Typography variant="caption" color="text.secondary" sx={{ textTransform: 'uppercase', fontWeight: 600 }}>
+                              Vehicle Model
+                            </Typography>
+                            <Typography variant="body1" fontWeight={600} sx={{ mt: 0.5 }}>
+                              {selectedVehicle.model}
+                            </Typography>
+                          </Box>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                          <Box sx={{ p: 2, bgcolor: 'background.default', borderRadius: 1, border: '1px solid', borderColor: 'divider' }}>
+                            <Typography variant="caption" color="text.secondary" sx={{ textTransform: 'uppercase', fontWeight: 600 }}>
+                              Vehicle Type
+                            </Typography>
+                            <Typography variant="body1" fontWeight={600} sx={{ mt: 0.5 }}>
+                              {selectedVehicle.type}
+                            </Typography>
+                          </Box>
+                        </Grid>
+                      </Grid>
+                    </Box>
+                  )}
+
+                  {/* Action Buttons */}
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4, pt: 3, borderTop: '1px solid', borderColor: 'divider' }}>
+                    <Button onClick={handleBack} size="large">
                       Back
                     </Button>
                     <Button
@@ -558,6 +584,11 @@ const BookingPage = () => {
                       variant="contained"
                       size="large"
                       disabled={loading}
+                      onClick={(e) => {
+                        console.log('[BookingPage] Confirm button clicked');
+                        console.log('[BookingPage] Event:', e);
+                        console.log('[BookingPage] Button type:', e.currentTarget.type);
+                      }}
                     >
                       {loading ? <CircularProgress size={24} /> : 'Confirm & Proceed to Payment'}
                     </Button>
