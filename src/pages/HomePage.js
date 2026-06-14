@@ -140,7 +140,9 @@ const HomePage = () => {
               <Card
                 elevation={2}
                 sx={{
-                  height: '100%',
+                  height: 220,
+                  display: 'flex',
+                  flexDirection: 'column',
                   transition: 'transform 0.2s',
                   '&:hover': {
                     transform: 'translateY(-8px)',
@@ -148,14 +150,23 @@ const HomePage = () => {
                   }
                 }}
               >
-                <CardContent sx={{ textAlign: 'center', py: 4 }}>
-                  <Box sx={{ mb: 2 }}>
+                <CardContent sx={{
+                  textAlign: 'center',
+                  py: 3,
+                  px: 3,
+                  flex: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
+                }}>
+                  <Box sx={{ mb: 1.5, mt: 1 }}>
                     {feature.icon}
                   </Box>
-                  <Typography variant="h6" gutterBottom fontWeight={600}>
+                  <Typography variant="h6" fontWeight={600} sx={{ mb: 1.5, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     {feature.title}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.5, flex: 1, display: 'flex', alignItems: 'center' }}>
                     {feature.description}
                   </Typography>
                 </CardContent>

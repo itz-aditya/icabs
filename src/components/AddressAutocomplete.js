@@ -3,7 +3,7 @@
  * Google Places API integration for address input
  */
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { TextField } from '@mui/material';
 
 const AddressAutocomplete = ({
@@ -20,46 +20,46 @@ const AddressAutocomplete = ({
 }) => {
   const inputRef = useRef(null);
   const autocompleteRef = useRef(null);
+  const [isMapsReady, setIsMapsReady] = useState(false);
 
   useEffect(() => {
-    if (!inputRef.current) return;
+    const checkGoogleMapsReady = () => {
+      const isReady = !!(window.google && window.google.maps && window.google.maps.places);
+      return isReady;
+    };
 
-    // Check if Google Maps API is loaded
-    if (!window.google || !window.google.maps || !window.google.maps.places) {
-      console.warn('Google Maps API not loaded. Autocomplete disabled.');
+    if (checkGoogleMapsReady()) {
+      setIsMapsReady(true);
       return;
     }
 
-    // Initialize autocomplete
-    try {
-      autocompleteRef.current = new window.google.maps.places.Autocomplete(
-        inputRef.current,
-        {
-          types: ['geocode', 'establishment'],
-          componentRestrictions: { country: 'in' }, // Restrict to India
-          fields: ['address_components', 'formatted_address', 'geometry', 'name']
-        }
-      );
-
-      // Add place changed listener
-      autocompleteRef.current.addListener('place_changed', handlePlaceSelect);
-    } catch (error) {
-      console.error('Error initializing autocomplete:', error);
-    }
-
-    // Cleanup
-    return () => {
-      if (autocompleteRef.current) {
-        window.google.maps.event.clearInstanceListeners(autocompleteRef.current);
+    const interval = setInterval(() => {
+      if (checkGoogleMapsReady()) {
+        setIsMapsReady(true);
+        clearInterval(interval);
       }
-    };
+    }, 100);
+
+    return () => clearInterval(interval);
   }, []);
 
-  const handlePlaceSelect = () => {
+  const onPlaceSelectedRef = useRef(onPlaceSelected);
+  const onChangeRef = useRef(onChange);
+
+  useEffect(() => {
+    onPlaceSelectedRef.current = onPlaceSelected;
+    onChangeRef.current = onChange;
+  }, [onPlaceSelected, onChange]);
+
+  const handlePlaceSelect = useCallback(() => {
+
+    if (!autocompleteRef.current) {
+      return;
+    }
+
     const place = autocompleteRef.current.getPlace();
 
     if (!place || !place.geometry) {
-      console.warn('No place details available');
       return;
     }
 
@@ -79,18 +79,52 @@ const AddressAutocomplete = ({
       });
     }
 
-    if (onPlaceSelected) {
-      onPlaceSelected(addressData);
+    if (onPlaceSelectedRef.current) {
+      onPlaceSelectedRef.current(addressData);
     }
 
-    if (onChange) {
-      onChange({
+    if (onChangeRef.current) {
+      onChangeRef.current({
         target: {
           value: addressData.address
         }
       });
     }
-  };
+  }, []); // Empty dependencies - stable function
+
+  useEffect(() => {
+    if (!inputRef.current) {
+      return;
+    }
+
+    if (!isMapsReady) {
+      return;
+    }
+
+    try {
+      autocompleteRef.current = new window.google.maps.places.Autocomplete(
+        inputRef.current,
+        {
+          types: ['geocode', 'establishment'],
+          componentRestrictions: { country: 'in' }, // Restrict to India
+          fields: ['address_components', 'formatted_address', 'geometry', 'name', 'place_id']
+        }
+      );
+
+      const handlePlaceChange = () => {
+        handlePlaceSelect();
+      };
+
+      autocompleteRef.current.addListener('place_changed', handlePlaceChange);
+    } catch (error) {
+    }
+
+    return () => {
+      if (autocompleteRef.current && window.google?.maps?.event) {
+        window.google.maps.event.clearInstanceListeners(autocompleteRef.current);
+      }
+    };
+  }, [isMapsReady]);
 
   const handleInputChange = (e) => {
     if (onChange) {
@@ -102,7 +136,7 @@ const AddressAutocomplete = ({
     <TextField
       {...props}
       inputRef={inputRef}
-      value={value}
+      value={value || ''}
       onChange={handleInputChange}
       label={label}
       placeholder={placeholder}
